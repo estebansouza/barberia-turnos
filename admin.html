@@ -29,10 +29,84 @@
         <select id="shopSelect"></select>
       </div>
       <p id="shopLink" class="empty"></p>
-      <h2 style="margin-top:1rem">Agenda del día</h2>
-      <label for="day">Día</label>
-      <input id="day" type="date">
-      <div id="list"></div>
+
+      <nav class="tabs" id="tabs">
+        <button type="button" class="tab active" data-tab="agenda">Agenda</button>
+        <button type="button" class="tab" data-tab="servicios">Servicios</button>
+        <button type="button" class="tab" data-tab="barberos">Barberos</button>
+        <button type="button" class="tab" data-tab="horarios">Horarios</button>
+        <button type="button" class="tab" data-tab="fotos">Fotos</button>
+        <button type="button" class="tab" data-tab="local">Mi local</button>
+      </nav>
+
+      <div class="tabpane" id="tab-agenda">
+        <h2>Agenda del día</h2>
+        <label for="day">Día</label>
+        <input id="day" type="date">
+        <div id="list"></div>
+      </div>
+
+      <div class="tabpane hidden" id="tab-servicios">
+        <h2>Servicios</h2>
+        <div id="servicesList"></div>
+        <h2 class="sub">Agregar servicio</h2>
+        <form id="serviceForm" class="row-form">
+          <input id="svName" placeholder="Nombre (ej: Corte)" maxlength="60" required>
+          <input id="svDur" type="number" min="10" max="240" step="5" placeholder="Minutos" required>
+          <input id="svPrice" type="number" min="0" step="10" placeholder="Precio $" required>
+          <button class="btn small" type="submit">Agregar</button>
+        </form>
+      </div>
+
+      <div class="tabpane hidden" id="tab-barberos">
+        <h2>Barberos</h2>
+        <div id="barbersList"></div>
+        <h2 class="sub">Agregar barbero</h2>
+        <form id="barberForm" class="row-form">
+          <input id="bbName" placeholder="Nombre" maxlength="60" required>
+          <button class="btn small" type="submit">Agregar</button>
+        </form>
+      </div>
+
+      <div class="tabpane hidden" id="tab-horarios">
+        <h2>Horarios de atención</h2>
+        <p class="empty">Los turnos se ofrecen cada 30 minutos dentro de estos horarios.</p>
+        <div id="hoursList"></div>
+        <button class="btn small" id="saveHours" type="button">Guardar horarios</button>
+      </div>
+
+      <div class="tabpane hidden" id="tab-fotos">
+        <h2>Logo</h2>
+        <div class="item">
+          <img id="logoPreview" class="thumb hidden" alt="Logo">
+          <label class="btn small filebtn">Subir logo<input id="logoFile" type="file" accept="image/*" hidden></label>
+          <button class="btn small danger hidden" id="logoRemove" type="button">Quitar</button>
+        </div>
+        <h2 class="sub">Galería (fotos de cortes y del local)</h2>
+        <label class="btn small filebtn">Agregar fotos<input id="galleryFile" type="file" accept="image/*" multiple hidden></label>
+        <div id="galleryList" class="gallery"></div>
+      </div>
+
+      <div class="tabpane hidden" id="tab-local">
+        <h2>Datos del local</h2>
+        <form id="shopForm">
+          <label for="shName">Nombre de la barbería</label>
+          <input id="shName" maxlength="80" required>
+          <label for="shWa">WhatsApp (con código de país, solo números)</label>
+          <input id="shWa" inputmode="numeric" placeholder="59899123456" maxlength="15">
+          <label for="shAddress">Dirección</label>
+          <input id="shAddress" maxlength="160" placeholder="Av. Italia 1234, Montevideo">
+          <label for="shInsta">Instagram (solo el usuario, sin @)</label>
+          <input id="shInsta" maxlength="30" placeholder="mibarberia">
+          <label for="shDesc">Descripción corta</label>
+          <textarea id="shDesc" maxlength="500" rows="3" placeholder="Contá en pocas líneas qué hace especial a tu barbería."></textarea>
+          <label for="shAccent">Color principal</label>
+          <input id="shAccent" type="color">
+          <button class="btn" type="submit">Guardar cambios</button>
+        </form>
+      </div>
+
+      <div id="panelMsg" class="msg hidden"></div>
       <button class="btn small" id="logout" type="button" style="margin-top:.75rem">Salir</button>
     </section>
 

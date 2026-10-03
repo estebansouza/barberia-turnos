@@ -7,11 +7,18 @@ const $ = (id) => document.getElementById(id);
 const fmtTime = new Intl.DateTimeFormat("es-UY", { timeZone: TZ, hour: "2-digit", minute: "2-digit", hour12: false });
 const fmtLong = new Intl.DateTimeFormat("es-UY", { timeZone: TZ, weekday: "long", day: "numeric", month: "long" });
 
-function chip(text, sub, onClick) {
+function chip(text, sub, onClick, imgPath) {
   const b = document.createElement("button");
   b.type = "button";
   b.className = "chip";
-  b.textContent = text;
+  if (imgPath) {
+    const img = document.createElement("img");
+    img.className = "avatar";
+    img.src = mediaUrl(imgPath);
+    img.alt = "";
+    b.append(img);
+  }
+  b.append(text);
   if (sub) {
     const s = document.createElement("small");
     s.textContent = sub;
@@ -54,13 +61,19 @@ function notFound() {
 async function init() {
   const slug = window.getShopSlug();
   const { data: shop, error: eShop } = await db
-    .from("shops").select("id,name,whatsapp,accent").eq("slug", slug).maybeSingle();
+    .from("shops").select("id,name,whatsapp,accent,logo_path").eq("slug", slug).maybeSingle();
   if (eShop || !shop) return notFound();
   state.shop = shop;
 
   document.title = `Reservá tu turno | ${shop.name}`;
   $("shopName").textContent = shop.name;
   document.documentElement.style.setProperty("--accent", shop.accent);
+  $("infoLink").href = `/${slug}/info`;
+  $("infoLink").classList.remove("hidden");
+  if (shop.logo_path) {
+    $("shopLogo").src = mediaUrl(shop.logo_path);
+    $("shopLogo").classList.remove("hidden");
+  }
   if (shop.whatsapp) {
     $("waLink").href = "https://wa.me/" + shop.whatsapp;
     $("waLink").classList.remove("hidden");
@@ -68,7 +81,7 @@ async function init() {
 
   const [{ data: services, error: e1 }, { data: barbers, error: e2 }] = await Promise.all([
     db.from("services").select("id,name,duration_min,price_uyu").eq("shop_id", shop.id).order("price_uyu"),
-    db.from("barbers").select("id,name").eq("shop_id", shop.id).order("name")
+    db.from("barbers").select("id,name,photo_path").eq("shop_id", shop.id).order("name")
   ]);
   if (e1 || e2) {
     $("services").textContent = "No se pudo cargar. Probá de nuevo en un momento.";
@@ -90,7 +103,7 @@ async function init() {
       state.barber = b; state.day = state.slot = null;
       resetFrom("day");
       enable("stepDay");
-    }))
+    }, b.photo_path))
   );
 
   const fmtChip = new Intl.DateTimeFormat("es-UY", { timeZone: TZ, weekday: "short", day: "numeric", month: "short" });

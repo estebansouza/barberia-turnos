@@ -29,3 +29,16 @@ select s.id, u.id from s, auth.users u where u.email = 'email-del-dueno@ejemplo.
 3. Compartir `https://<dominio>/donpepe` con los clientes y `https://<dominio>/admin.html` con el dueño.
 
 Horarios: `weekday` 0 = domingo ... 6 = sábado. Los turnos se ofrecen cada 30 minutos, hora de Montevideo.
+
+## Qué puede hacer el dueño desde el panel (`/admin.html`)
+
+- **Agenda:** ver y cancelar turnos del día, y mandar un recordatorio por WhatsApp con un clic (el mensaje sale armado y el turno queda marcado como "Recordado").
+- **Servicios y Barberos:** editar, agregar y quitar. Quitar los desactiva; los turnos ya reservados se conservan.
+- **Horarios:** abrir o cerrar cada día y fijar apertura y cierre.
+- **Fotos:** logo, foto de cada barbero y galería. Las imágenes se reducen en el navegador y se guardan en Supabase Storage (bucket `shop-media`, una carpeta por barbería).
+- **Mi local:** nombre, WhatsApp, dirección, Instagram, descripción y color.
+
+## Páginas públicas
+
+- `https://<dominio>/<slug>`: reserva de turnos.
+- `https://<dominio>/<slug>/info`: página del local (servicios, equipo, galería, horarios, mapa y contacto).

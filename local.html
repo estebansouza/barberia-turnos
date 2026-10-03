@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Barbería</title>
+  <meta name="description" content="Servicios, precios, horarios y ubicación. Reservá tu turno online.">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="wrap">
+    <div id="notFound" class="step hidden">
+      <h2>No encontramos esta barbería</h2>
+      <p class="empty">Revisá que el enlace esté bien escrito.</p>
+    </div>
+
+    <div id="page" class="hidden">
+      <header class="top">
+        <img id="logo" class="logo hidden" alt="Logo">
+        <h1 id="shopName"></h1>
+        <p id="description"></p>
+      </header>
+
+      <a id="bookTop" class="btn cta">Reservar turno</a>
+
+      <section class="step">
+        <h2>Servicios y precios</h2>
+        <div id="services"></div>
+      </section>
+
+      <section class="step hidden" id="barbersBox">
+        <h2>Nuestro equipo</h2>
+        <div id="barbers" class="team"></div>
+      </section>
+
+      <section class="step hidden" id="galleryBox">
+        <h2>Galería</h2>
+        <div id="gallery" class="gallery"></div>
+      </section>
+
+      <section class="step">
+        <h2>Horarios</h2>
+        <div id="hours"></div>
+      </section>
+
+      <section class="step">
+        <h2>Cómo encontrarnos</h2>
+        <p id="address" class="hidden"></p>
+        <div class="actions-row">
+          <a id="mapLink" class="btn small hidden" target="_blank" rel="noopener">Ver en el mapa</a>
+          <a id="waLink" class="btn small hidden" target="_blank" rel="noopener">WhatsApp</a>
+          <a id="instaLink" class="btn small hidden" target="_blank" rel="noopener">Instagram</a>
+        </div>
+      </section>
+
+      <a id="bookBottom" class="btn cta">Reservar turno</a>
+    </div>
+
+    <footer>
+      <p>Sistema de turnos por <a href="https://github.com/estebansouza" rel="noopener">Esteban Souza</a></p>
+    </footer>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/dist/umd/supabase.js"></script>
+  <script src="/config.js"></script>
+  <script src="/local.js"></script>
+</body>
+</html>
