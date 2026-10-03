@@ -3,54 +3,64 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Reservá tu turno | Barbería</title>
+  <title>Reservá tu turno</title>
   <meta name="description" content="Reservá tu turno online en segundos: elegí servicio, barbero, día y hora.">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
   <div class="wrap">
     <header class="top">
-      <h1 id="shopName">Barbería<span>.</span></h1>
+      <h1 id="shopName">&nbsp;</h1>
       <p>Reservá tu turno online en menos de un minuto.</p>
     </header>
 
-    <section class="step" id="stepService">
-      <h2><span class="n">1</span>Elegí el servicio</h2>
-      <div class="options" id="services"><span class="empty">Cargando…</span></div>
-    </section>
+    <div id="notFound" class="step hidden">
+      <h2>No encontramos esta barbería</h2>
+      <p class="empty">Revisá que el enlace esté bien escrito.</p>
+    </div>
 
-    <section class="step disabled" id="stepBarber">
-      <h2><span class="n">2</span>Elegí el barbero</h2>
-      <div class="options" id="barbers"></div>
-    </section>
+    <div id="booking">
+      <section class="step" id="stepService">
+        <h2><span class="n">1</span>Elegí el servicio</h2>
+        <div class="options" id="services"><span class="empty">Cargando…</span></div>
+      </section>
 
-    <section class="step disabled" id="stepDay">
-      <h2><span class="n">3</span>Elegí el día</h2>
-      <div class="options" id="days"></div>
-    </section>
+      <section class="step disabled" id="stepBarber">
+        <h2><span class="n">2</span>Elegí el barbero</h2>
+        <div class="options" id="barbers"></div>
+      </section>
 
-    <section class="step disabled" id="stepTime">
-      <h2><span class="n">4</span>Elegí la hora</h2>
-      <div class="options" id="times"></div>
-    </section>
+      <section class="step disabled" id="stepDay">
+        <h2><span class="n">3</span>Elegí el día</h2>
+        <div class="options" id="days"></div>
+      </section>
 
-    <section class="step disabled" id="stepData">
-      <h2><span class="n">5</span>Tus datos</h2>
-      <form id="form" novalidate>
-        <label for="name">Nombre</label>
-        <input id="name" autocomplete="name" maxlength="80" required>
-        <label for="phone">WhatsApp / celular</label>
-        <input id="phone" type="tel" autocomplete="tel" placeholder="099 123 456" maxlength="16" required>
-        <button class="btn" id="submit" type="submit">Confirmar turno</button>
-      </form>
-      <div id="result" class="msg hidden"></div>
-    </section>
+      <section class="step disabled" id="stepTime">
+        <h2><span class="n">4</span>Elegí la hora</h2>
+        <div class="options" id="times"></div>
+      </section>
 
-    <footer>Hecho por <a href="https://github.com/estebansouza" rel="noopener">Esteban Souza</a> · <a href="admin.html">Acceso del local</a></footer>
+      <section class="step disabled" id="stepData">
+        <h2><span class="n">5</span>Tus datos</h2>
+        <form id="form" novalidate>
+          <label for="name">Nombre</label>
+          <input id="name" autocomplete="name" maxlength="80" required>
+          <label for="phone">WhatsApp / celular</label>
+          <input id="phone" type="tel" autocomplete="tel" placeholder="099 123 456" maxlength="16" required>
+          <button class="btn" id="submit" type="submit">Confirmar turno</button>
+        </form>
+        <div id="result" class="msg hidden"></div>
+      </section>
+    </div>
+
+    <footer>
+      <a id="waLink" class="hidden" target="_blank" rel="noopener">Escribinos por WhatsApp</a>
+      <p>Sistema de turnos por <a href="https://github.com/estebansouza" rel="noopener">Esteban Souza</a> · <a href="/admin.html">Acceso del local</a></p>
+    </footer>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/dist/umd/supabase.js"></script>
-  <script src="config.js"></script>
-  <script src="app.js"></script>
+  <script src="/config.js"></script>
+  <script src="/app.js"></script>
 </body>
 </html>

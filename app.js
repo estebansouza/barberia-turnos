@@ -1,7 +1,7 @@
-const { SUPABASE_URL, SUPABASE_KEY, TZ, SHOP_NAME } = window.APP_CONFIG;
+const { SUPABASE_URL, SUPABASE_KEY, TZ } = window.APP_CONFIG;
 const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-const state = { service: null, barber: null, day: null, slot: null };
+const state = { shop: null, service: null, barber: null, day: null, slot: null };
 const $ = (id) => document.getElementById(id);
 
 const fmtTime = new Intl.DateTimeFormat("es-UY", { timeZone: TZ, hour: "2-digit", minute: "2-digit", hour12: false });
@@ -35,7 +35,7 @@ function showMsg(text, kind) {
   el.className = "msg " + kind;
 }
 
-// Próximos 14 días en hora de Montevideo, como "YYYY-MM-DD"
+// Próximos n días en hora de Montevideo, como "YYYY-MM-DD"
 function nextDays(n) {
   const out = [];
   for (let i = 0; i < n; i++) {
@@ -45,13 +45,30 @@ function nextDays(n) {
   return out;
 }
 
+function notFound() {
+  $("booking").classList.add("hidden");
+  $("notFound").classList.remove("hidden");
+  $("shopName").textContent = "Turnos online";
+}
+
 async function init() {
-  $("shopName").innerHTML = "";
-  $("shopName").append(SHOP_NAME.replace(/\.$/, ""), Object.assign(document.createElement("span"), { textContent: "." }));
+  const slug = window.getShopSlug();
+  const { data: shop, error: eShop } = await db
+    .from("shops").select("id,name,whatsapp,accent").eq("slug", slug).maybeSingle();
+  if (eShop || !shop) return notFound();
+  state.shop = shop;
+
+  document.title = `Reservá tu turno | ${shop.name}`;
+  $("shopName").textContent = shop.name;
+  document.documentElement.style.setProperty("--accent", shop.accent);
+  if (shop.whatsapp) {
+    $("waLink").href = "https://wa.me/" + shop.whatsapp;
+    $("waLink").classList.remove("hidden");
+  }
 
   const [{ data: services, error: e1 }, { data: barbers, error: e2 }] = await Promise.all([
-    db.from("services").select("id,name,duration_min,price_uyu").order("price_uyu"),
-    db.from("barbers").select("id,name").order("name")
+    db.from("services").select("id,name,duration_min,price_uyu").eq("shop_id", shop.id).order("price_uyu"),
+    db.from("barbers").select("id,name").eq("shop_id", shop.id).order("name")
   ]);
   if (e1 || e2) {
     $("services").textContent = "No se pudo cargar. Probá de nuevo en un momento.";

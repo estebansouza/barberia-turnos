@@ -3,6 +3,8 @@ const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 const $ = (id) => document.getElementById(id);
 const fmtTime = new Intl.DateTimeFormat("es-UY", { timeZone: TZ, hour: "2-digit", minute: "2-digit", hour12: false });
 
+let shops = [];
+
 function today() {
   return new Intl.DateTimeFormat("en-CA", { timeZone: TZ }).format(new Date());
 }
@@ -12,27 +14,51 @@ function loginError(text) {
   $("loginMsg").classList.remove("hidden");
 }
 
+function currentShop() {
+  return shops.find((s) => s.id === $("shopSelect").value) || shops[0];
+}
+
 async function showPanelIfAdmin() {
   const { data: { session } } = await db.auth.getSession();
   if (!session) return;
-  const { data: adminRow } = await db.from("admins").select("user_id").maybeSingle();
-  if (!adminRow) {
+
+  const { data, error } = await db.from("shop_admins").select("shop_id, shops(id,name,slug)");
+  shops = (data || []).map((r) => r.shops).filter(Boolean);
+  if (error || !shops.length) {
     await db.auth.signOut();
     return loginError("Esta cuenta no tiene permiso para ver el panel.");
   }
+
+  $("shopSelect").innerHTML = "";
+  shops.forEach((s) => $("shopSelect").append(new Option(s.name, s.id)));
+  $("shopPicker").classList.toggle("hidden", shops.length < 2);
+
   $("loginBox").classList.add("hidden");
   $("panel").classList.remove("hidden");
   $("day").value = today();
+  showShopLink();
   loadDay();
 }
 
+function showShopLink() {
+  const s = currentShop();
+  const url = `${location.origin}/${s.slug}`;
+  const p = $("shopLink");
+  p.textContent = "Enlace para tus clientes: ";
+  const a = document.createElement("a");
+  a.href = url; a.textContent = url; a.target = "_blank"; a.rel = "noopener"; a.style.color = "inherit";
+  p.append(a);
+}
+
 async function loadDay() {
+  const shop = currentShop();
   const day = $("day").value;
   const from = new Date(`${day}T00:00:00-03:00`).toISOString();
   const to = new Date(`${day}T23:59:59-03:00`).toISOString();
   const { data, error } = await db
     .from("appointments")
     .select("id,starts_at,customer_name,customer_phone,status,barbers(name),services(name)")
+    .eq("shop_id", shop.id)
     .gte("starts_at", from).lte("starts_at", to)
     .order("starts_at");
   const list = $("list");
@@ -87,6 +113,7 @@ $("loginForm").addEventListener("submit", async (ev) => {
 });
 
 $("day").addEventListener("change", loadDay);
+$("shopSelect").addEventListener("change", () => { showShopLink(); loadDay(); });
 $("logout").addEventListener("click", async () => {
   await db.auth.signOut();
   location.reload();
